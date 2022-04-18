@@ -477,6 +477,14 @@ openapi = ["openapi-core (>=0.14.2)", "ruamel.yaml"]
 test = ["codecov", "ipykernel", "pytest (>=5.3.2)", "pytest-cov", "jupyter-server", "pytest-console-scripts", "strict-rfc3339", "wheel", "openapi-spec-validator (<0.5)", "openapi-core (>=0.14.2)", "ruamel.yaml"]
 
 [[package]]
+name = "jupyterlab-tabnine"
+version = "0.0.24"
+description = "JupyterLab client for Tabnine"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
 name = "markupsafe"
 version = "2.1.1"
 description = "Safely add untrusted strings to HTML/XML markup."
@@ -1016,7 +1024,7 @@ test = ["websockets"]
 [metadata]
 lock-version = "1.1"
 python-versions = "3.9"
-content-hash = "6d500872e84b54240567a2d773226a0e1bade5942bf073fa65a7c52a2aa166c2"
+content-hash = "a5636d6d93b75ee15bdb3eeb4c2ecb8d62dc53007ba4a8b3640d6df8f4111877"
 
 [metadata.files]
 anyio = [
@@ -1241,6 +1249,10 @@ jupyterlab-pygments = [
 jupyterlab-server = [
     {file = "jupyterlab_server-2.12.0-py3-none-any.whl", hash = "sha256:db5d234955c5c2684f77a064345712f071acf7df31f0d8c31b420b33b09d6472"},
     {file = "jupyterlab_server-2.12.0.tar.gz", hash = "sha256:00e0f4b4c399f55938323ea10cf92d915288fe12753e35d1069f6ca08b72abbf"},
+]
+jupyterlab-tabnine = [
+    {file = "jupyterlab_tabnine-0.0.24-py3-none-any.whl", hash = "sha256:15c3e6e9bfcd24fb18eee900e67c35322994cce2065a6590cf0e515e12f8bbdf"},
+    {file = "jupyterlab_tabnine-0.0.24.tar.gz", hash = "sha256:6a0fe256a777cc2f08c6b323bc574458a16a0c131a59d3e3a981e86801a8dd69"},
 ]
 markupsafe = [
     {file = "MarkupSafe-2.1.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:86b1f75c4e7c2ac2ccdaec2b9022845dbb81880ca318bb7a0a01fbf7813e3812"},
