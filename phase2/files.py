@@ -32,9 +32,9 @@ def get_dataset():
     df_num = df.select_dtypes(exclude='object')
     df_num_ordinal = df_num.drop(["id", "smoke", "alco", "active", "cardio"], axis=1)
     df_num_cat = df_num.drop(["age", "height", "weight", "ap_hi", "ap_lo"], axis=1)
-    scaler.fit(df_num_ordinal)
-    df_num_ordinal = pd.DataFrame(scaler.transform(df_num_ordinal),
-                                  columns=["age", "height", "weight", "ap_hi", "ap_lo"])
+    # scaler.fit(df_num_ordinal)
+    # df_num_ordinal = pd.DataFrame(scaler.transform(df_num_ordinal),
+    #                               columns=["age", "height", "weight", "ap_hi", "ap_lo"])
     df_num = df_num_ordinal.join(df_num_cat)
     df = df_num.join(df_cat).drop("id", axis=1)
     return df
