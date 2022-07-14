@@ -25,7 +25,7 @@ def get_onehot_dataset():
 
 def get_dataset():
     scaler = MinMaxScaler()
-    input_file = "phase2/cardio_train.csv"
+    input_file = "cardio_train.csv"
     df = pd.read_csv(input_file, header=0)
 
     df_cat = df.select_dtypes(include='object')
