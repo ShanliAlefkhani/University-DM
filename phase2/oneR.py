@@ -2,6 +2,7 @@ from files import get_dataset
 from sklearn.model_selection import train_test_split
 import numpy as np
 
+
 def oneR_firstStep(data):
     temp_d = []
     start = 0
@@ -42,11 +43,10 @@ def oneR_secondStep(oner_fd, data, threshold):
         temp[1] = end
         temp[2] = zero_count
         temp[3] = one_count
-        temp[4] = data[end][0]
         temp_d.append(temp)
     return temp_d
 
-def oneR_thirdStep(oner_ds):
+def oneR_thirdStep(oner_ds, data):
 
     def max_label(index):
         label = max(oner_ds[index][2], oner_ds[index][3])
@@ -70,10 +70,10 @@ def oneR_thirdStep(oner_ds):
                 temp[1] = oner_ds[i][1]
                 temp[2] += oner_ds[i][2]
                 temp[3] += oner_ds[i][3]
-                temp.append(label)
-
             else:
                 break
+        temp[4] = data[temp[1]][0]
+        temp.append(label)
         temp_d.append(temp)
     
     return temp_d
@@ -96,73 +96,86 @@ def predict(min_error, x):
 df = get_dataset()
 y = df[["cardio"]]
 df_num = df.select_dtypes(exclude='object')
-df_num_cat = df_num.drop([ "smoke", "alco", "active"], axis=1)
+df_num_cat = df_num.drop(["smoke", "alco", "active"], axis=1)
+df_temp1 = df_num_cat.drop("cardio", axis=1)
+error_rate_sum = 0
 print(df_num_cat)
-X = df_num_cat
+for _ in range(5):
+    X_train, X_test, y_train, y_test = train_test_split(df_temp1, y, test_size=0.2, random_state=1000)
+    print(X_train)
+    df = X_train.join(y_train)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+    # data_top = data.head()
 
-# data_top = data.head()
+    errors = []
 
-errors = []
+    df_temp = df[["age", "cardio"]]
+    df_temp = df_temp.sort_values("age")
+    #print(df_temp)
+    #print(df_temp["cardio"].value_counts())
+    df_temp = df_temp.to_numpy()
+    oner_f = oneR_firstStep(df_temp)
+    #print(oner_f)
+    oner_s = oneR_secondStep(oner_f, df_temp, len(df_temp) // 10)
+    #print(oner_s)
+    age_oner_t = oneR_thirdStep(oner_s, df_temp)
+    print(age_oner_t)
+    errors.append([0, cal_error(age_oner_t), age_oner_t])
 
-df_temp = df[["age", "cardio"]]
-df_temp = df_temp.sort_values("age")
-print(df_temp)
-print(df_temp["cardio"].value_counts())
-df_temp = df_temp.to_numpy()
-oner_f = oneR_firstStep(df_temp)
-print(oner_f)
-oner_s = oneR_secondStep(oner_f, df_temp, len(df_temp) // 10)
-print(oner_s)
-age_oner_t = oneR_thirdStep(oner_s)
-print(age_oner_t)
-errors.append(["age", cal_error(age_oner_t), age_oner_t])
+    df_temp = df[["height", "cardio"]]
+    df_temp = df_temp.sort_values("height")
+    print(df_temp["cardio"].value_counts())
+    df_temp = df_temp.to_numpy()
+    oner_f = oneR_firstStep(df_temp)
+    oner_s = oneR_secondStep(oner_f, df_temp, len(df_temp) // 10)
+    height_oner_t = oneR_thirdStep(oner_s, df_temp)
+    print(height_oner_t)
+    errors.append([1, cal_error(height_oner_t), height_oner_t])
 
-df_temp = df[["height", "cardio"]]
-df_temp = df_temp.sort_values("height")
-print(df_temp)
-print(df_temp["cardio"].value_counts())
-df_temp = df_temp.to_numpy()
-oner_f = oneR_firstStep(df_temp)
-oner_s = oneR_secondStep(oner_f, df_temp, len(df_temp) // 10)
-height_oner_t = oneR_thirdStep(oner_s)
-print(height_oner_t)
-errors.append(["height", cal_error(height_oner_t), height_oner_t])
+    df_temp = df[["weight", "cardio"]]
+    df_temp = df_temp.sort_values("weight")
+    print(df_temp["cardio"].value_counts())
+    df_temp = df_temp.to_numpy()
+    oner_f = oneR_firstStep(df_temp)
+    oner_s = oneR_secondStep(oner_f, df_temp, len(df_temp) // 10)
+    weight_oner_t = oneR_thirdStep(oner_s, df_temp)
+    print(weight_oner_t)
+    errors.append([2, cal_error(weight_oner_t), weight_oner_t])
 
-df_temp = df[["weight", "cardio"]]
-df_temp = df_temp.sort_values("weight")
-print(df_temp)
-print(df_temp["cardio"].value_counts())
-df_temp = df_temp.to_numpy()
-oner_f = oneR_firstStep(df_temp)
-oner_s = oneR_secondStep(oner_f, df_temp, len(df_temp) // 10)
-weight_oner_t = oneR_thirdStep(oner_s)
-print(weight_oner_t)
-errors.append(["weight", cal_error(weight_oner_t), weight_oner_t])
+    df_temp = df[["ap_hi", "cardio"]]
+    df_temp = df_temp.sort_values("ap_hi")
+    print(df_temp["cardio"].value_counts())
+    df_temp = df_temp.to_numpy()
+    oner_f = oneR_firstStep(df_temp)
+    oner_s = oneR_secondStep(oner_f, df_temp, len(df_temp) // 10)
+    aphi_oner_t = oneR_thirdStep(oner_s, df_temp)
+    print(aphi_oner_t)
+    errors.append([3, cal_error(aphi_oner_t), aphi_oner_t])
 
-df_temp = df[["ap_hi", "cardio"]]
-df_temp = df_temp.sort_values("ap_hi")
-print(df_temp)
-print(df_temp["cardio"].value_counts())
-df_temp = df_temp.to_numpy()
-oner_f = oneR_firstStep(df_temp)
-oner_s = oneR_secondStep(oner_f, df_temp, len(df_temp) // 10)
-aphi_oner_t = oneR_thirdStep(oner_s)
-print(aphi_oner_t)
-errors.append(["ap_hi", cal_error(aphi_oner_t), aphi_oner_t])
+    df_temp = df[["ap_lo", "cardio"]]
+    df_temp = df_temp.sort_values("ap_lo")
+    print(df_temp["cardio"].value_counts())
+    df_temp = df_temp.to_numpy()
+    oner_f = oneR_firstStep(df_temp)
+    oner_s = oneR_secondStep(oner_f, df_temp, len(df_temp) // 10)
+    aplo_oner_t = oneR_thirdStep(oner_s, df_temp)
+    print(aplo_oner_t)
+    errors.append([4, cal_error(aplo_oner_t), aplo_oner_t])
 
-df_temp = df[["ap_lo", "cardio"]]
-df_temp = df_temp.sort_values("ap_lo")
-print(df_temp)
-print(df_temp["cardio"].value_counts())
-df_temp = df_temp.to_numpy()
-oner_f = oneR_firstStep(df_temp)
-oner_s = oneR_secondStep(oner_f, df_temp, len(df_temp) // 10)
-aplo_oner_t = oneR_thirdStep(oner_s)
-print(aplo_oner_t)
-errors.append(["ap_lo", cal_error(aplo_oner_t), aplo_oner_t])
+    min_error = min(errors, key=lambda x: x[1])
+    print("min error:", min_error)
 
-print(errors)
-min_error = min(errors, key=lambda x: x[1])
+    X_test = X_test.to_numpy()
+    y_test = y_test.to_numpy()
+    y_test = np.ravel(y_test)
 
+
+    error_rate = 0
+    for i in range(len(X_test)):
+        #print("predicted:", predict(min_error, X_test[i]), "actual:", y_test[i])
+        if predict(min_error, X_test[i]) != y_test[i]:
+            error_rate += 1
+    error_rate /= len(y_test)
+    error_rate_sum += error_rate
+    print("error_rate:", error_rate)
+print("avarage error rate:", error_rate_sum/5)
